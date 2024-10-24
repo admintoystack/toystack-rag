@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12.6-slim
+# Use an official Python runtime as a parent image (slim version for smaller size)
+FROM python:3.12-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -7,16 +7,13 @@ WORKDIR /app
 # Copy the current directory contents into the container
 COPY . /app
 
-# Install dependencies for building Python packages (for psycopg2)
-RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev
+# Install Python dependencies using requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Install Python dependencies directly (no virtual environment needed)
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Copy the .env file to the container (ensure it's in your source directory)
+# Copy the .env file to the container
 COPY .env /app/.env
 
-# Expose port for Streamlit (default port is 8501)
+# Expose port for Streamlit (default is 8501)
 EXPOSE 8501
 
 # Command to run the Streamlit app
